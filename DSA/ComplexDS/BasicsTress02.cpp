@@ -1,6 +1,6 @@
 #include <iostream>
 using namespace std;
-
+# define NULL_PTR nullptr
 struct Node {
     int data;
     Node* left;
@@ -9,8 +9,8 @@ struct Node {
     // constructor
     Node(int val) {
         data = val;
-        left = nullptr;
-        right = nullptr;
+        left = NULL_PTR;
+        right =NULL_PTR;
     }
 };
 
@@ -19,7 +19,8 @@ Node* createTree() {
     cout << "Enter data (-1 for no node): ";
     cin >> val;
 
-    if (val == -1) return nullptr;  // if no node
+    if (val == -1) 
+    return nullptr;  // if no node
 
     Node* root = new Node(val);     // create a new node
     cout << "Enter left child of " << val << ":\n";
@@ -27,7 +28,7 @@ Node* createTree() {
     cout << "Enter right child of " << val << ":\n";
     root->right = createTree();     // recursively create right subtree
 
-    
+
     return root;
 }
 
