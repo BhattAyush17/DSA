@@ -1,6 +1,6 @@
 #include <iostream>
 using namespace std;
-# define NULL_PTR nullptr
+# define NULL_PTR NULL
 struct Node {
     int data;
     Node* left;
@@ -20,7 +20,7 @@ Node* createTree() {
     cin >> val;
 
     if (val == -1) 
-    return nullptr;  // if no node
+    return NULL;  // if no node
 
     Node* root = new Node(val);     // create a new node
     cout << "Enter left child of " << val << ":\n";
@@ -34,7 +34,7 @@ Node* createTree() {
 
 // Step 3: Print tree in Inorder
 void printInorder(Node* root) {
-    if (root == nullptr) return;
+    if (root == NULL) return;
     printInorder(root->left);
     cout << root->data << " ";
     printInorder(root->right);
