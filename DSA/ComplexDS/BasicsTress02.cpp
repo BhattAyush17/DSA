@@ -30,6 +30,7 @@ Node* createTree() {
 
 
     return root;
+    
 }
 
 // Step 3: Print tree in Inorder
