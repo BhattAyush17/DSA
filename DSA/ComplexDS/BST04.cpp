@@ -38,6 +38,15 @@ void inorder(Node* root) {
     inorder(root->right);
 }
 
+// Search for a value in BST
+bool search(Node* root, int key) {
+    if (root == nullptr) return false;
+
+    if (root->data == key) return true;
+    else if (key < root->data) return search(root->left, key);
+    else return search(root->right, key);
+}
+
 int main() {
     Node* root = nullptr;
 
@@ -53,6 +62,13 @@ int main() {
     cout << "Inorder Traversal (Sorted Order): ";
     inorder(root);
     cout << endl;
+
+    // Example search
+    int key = 60;
+    if (search(root, key))
+        cout << "Value " << key << " found in BST." << endl;
+    else
+        cout << "Value " << key << " not found in BST." << endl;
 
     return 0;
 }
