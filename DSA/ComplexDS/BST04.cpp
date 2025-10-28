@@ -82,8 +82,7 @@ int main() {
     insert(root, 40);
     insert(root, 60);
     insert(root, 80);
-
-    cout << "Inorder Traversal (Sorted Order): ";
+    cout << "Inorder Traversal of the BST (Sorted Order): ";
     inorder(root);
     cout << endl;
 
