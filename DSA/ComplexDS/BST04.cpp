@@ -47,6 +47,30 @@ bool search(Node* root, int key) {
     else return search(root->right, key);
 }
 
+// Find minimum value in BST
+int findMin(Node* root) {
+    if (root == nullptr) {
+        cout << "Tree is empty." << endl;
+        return -1;
+    }
+    while (root->left != nullptr) {
+        root = root->left;
+    }
+    return root->data;
+}
+
+// Find maximum value in BST
+int findMax(Node* root) {
+    if (root == nullptr) {
+        cout << "Tree is empty." << endl;
+        return -1;
+    }
+    while (root->right != nullptr) {
+        root = root->right;
+    }
+    return root->data;
+}
+
 int main() {
     Node* root = nullptr;
 
@@ -69,6 +93,10 @@ int main() {
         cout << "Value " << key << " found in BST." << endl;
     else
         cout << "Value " << key << " not found in BST." << endl;
+
+    // Display Min and Max values
+    cout << "Minimum value in BST: " << findMin(root) << endl;
+    cout << "Maximum value in BST: " << findMax(root) << endl;
 
     return 0;
 }
