@@ -38,7 +38,9 @@ int main() {
     cout << "Original array: ";
     printHeap(arr, n);
 
+    
     buildMinHeap(arr, n);
+
 
     cout << "Min Heap: ";
     printHeap(arr, n);
