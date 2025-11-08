@@ -1,6 +1,8 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <queue>
+#include <stdexcept>
 
 using namespace std;
 
@@ -142,28 +144,28 @@ int main() {
 
     // Min-heap
     int minArr[5];
-    copy(begin(arr), end(arr), begin(minArr));
+    copy(arr, arr + n, minArr);
     buildMinHeap(minArr, n);
     cout << "Min Heap: ";
     printArr(minArr, n);
 
     // Max-heap
     int maxArr[5];
-    copy(begin(arr), end(arr), begin(maxArr));
+    copy(arr, arr + n, maxArr);
     buildMaxHeap(maxArr, n);
     cout << "Max Heap: ";
     printArr(maxArr, n);
 
     // Heap sort ascending
     int asc[5];
-    copy(begin(arr), end(arr), begin(asc));
+    copy(arr, arr + n, asc);
     heapSortAscending(asc, n);
     cout << "Heap Sort Ascending: ";
     printArr(asc, n);
 
     // Heap sort descending
     int desc[5];
-    copy(begin(arr), end(arr), begin(desc));
+    copy(arr, arr + n, desc);
     heapSortDescending(desc, n);
     cout << "Heap Sort Descending: ";
     printArr(desc, n);
@@ -177,6 +179,109 @@ int main() {
     cout << "Extracting elements: ";
     while (!mh.empty()) cout << mh.extractMin() << " ";
     cout << endl;
+
+    return 0;
+}
+
+// --- Additional heap utilities and MaxHeap class ---
+
+// Max-heap class (dynamic)
+class MaxHeap {
+    vector<int> h;
+
+    void siftUp(int idx) {
+        while (idx > 0) {
+            int parent = (idx - 1) / 2;
+            if (h[parent] < h[idx]) {
+                swap(h[parent], h[idx]);
+                idx = parent;
+            } else break;
+        }
+    }
+
+    void siftDown(int idx) {
+        int n = (int)h.size();
+        while (true) {
+            int left = 2 * idx + 1;
+            int right = 2 * idx + 2;
+            int largest = idx;
+            if (left < n && h[left] > h[largest]) largest = left;
+            if (right < n && h[right] > h[largest]) largest = right;
+            if (largest != idx) {
+                swap(h[idx], h[largest]);
+                idx = largest;
+            } else break;
+        }
+    }
+
+public:
+    MaxHeap() = default;
+    MaxHeap(const vector<int>& arr) : h(arr) {
+        for (int i = (int)h.size() / 2 - 1; i >= 0; --i)
+            siftDown(i);
+    }
+
+    void insert(int val) {
+        h.push_back(val);
+        siftUp((int)h.size() - 1);
+    }
+
+    int extractMax() {
+        if (h.empty()) throw runtime_error("Heap is empty");
+        int ret = h[0];
+        h[0] = h.back();
+        h.pop_back();
+        if (!h.empty()) siftDown(0);
+        return ret;
+    }
+
+    int peek() const {
+        if (h.empty()) throw runtime_error("Heap is empty");
+        return h[0];
+    }
+
+    bool empty() const { return h.empty(); }
+    size_t size() const { return h.size(); }
+
+    void print() const {
+        for (int x : h) cout << x << " ";
+        cout << endl;
+    }
+};
+
+// Heap sort using priority_queue for convenience (returns sorted vector)
+vector<int> heapSortUsingPQ(const vector<int>& a, bool ascending = true) {
+    vector<int> out;
+    if (ascending) {
+        // min-heap: use greater to pop smallest first
+        priority_queue<int, vector<int>, greater<int>> pq(a.begin(), a.end());
+        while (!pq.empty()) { out.push_back(pq.top()); pq.pop(); }
+    } else {
+        // max-heap default
+        priority_queue<int> pq(a.begin(), a.end());
+        while (!pq.empty()) { out.push_back(pq.top()); pq.pop(); }
+    }
+    return out;
+}
+
+// Small demo function that can be called from elsewhere if desired
+int main_demo() {
+    vector<int> vec = {10, 5, 3, 2, 4};
+    cout << "--- MaxHeap demo ---\n";
+    MaxHeap MH(vec);
+    cout << "Built MaxHeap: "; MH.print();
+    MH.insert(12);
+    cout << "After insert(12): "; MH.print();
+    cout << "peek(): " << MH.peek() << ", size(): " << MH.size() << "\n";
+    cout << "Extracting maxes: ";
+    while (!MH.empty()) cout << MH.extractMax() << " ";
+    cout << "\n";
+
+    cout << "--- heapSortUsingPQ ---\n";
+    vector<int> ascSorted = heapSortUsingPQ(vec, true);
+    cout << "Ascending (pq): "; for (int x : ascSorted) cout << x << " "; cout << '\n';
+    vector<int> descSorted = heapSortUsingPQ(vec, false);
+    cout << "Descending (pq): "; for (int x : descSorted) cout << x << " "; cout << '\n';
 
     return 0;
 }
