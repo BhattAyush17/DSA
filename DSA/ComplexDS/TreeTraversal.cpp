@@ -1,5 +1,7 @@
 #include <iostream>
 #include <queue>
+#include <algorithm>  // for max()
+#include <climits>    // for INT_MIN
 using namespace std;
 #define NULL_PTR NULL
 
@@ -32,7 +34,9 @@ Node* createTree() {
     return root;
 }
 
-// Traversals
+
+// Traversal
+
 void printInorder(Node* root) {
     if (!root) return;
     printInorder(root->left);
@@ -54,7 +58,7 @@ void printPostorder(Node* root) {
     cout << root->data << " ";
 }
 
-// ⭐ NEW: Level-order traversal (Breadth First Search)
+// Level-order traversal
 void printLevelOrder(Node* root) {
     if (!root) return;
     queue<Node*> q;
@@ -70,47 +74,38 @@ void printLevelOrder(Node* root) {
     }
 }
 
-// Height
 int treeHeight(Node* root) {
     if (!root) return 0;
-    int leftH = treeHeight(root->left);
-    int rightH = treeHeight(root->right);
-    return max(leftH, rightH) + 1;
+    return 1 + max(treeHeight(root->left), treeHeight(root->right));
 }
 
-// Count nodes
 int countNodes(Node* root) {
     if (!root) return 0;
     return 1 + countNodes(root->left) + countNodes(root->right);
 }
 
-// Count leaf nodes
 int countLeafNodes(Node* root) {
     if (!root) return 0;
     if (!root->left && !root->right) return 1;
     return countLeafNodes(root->left) + countLeafNodes(root->right);
 }
 
-// ⭐ NEW: Count internal (non-leaf) nodes
 int countInternalNodes(Node* root) {
     if (!root || (!root->left && !root->right)) return 0;
     return 1 + countInternalNodes(root->left) + countInternalNodes(root->right);
 }
 
-// Search
 bool searchNode(Node* root, int key) {
     if (!root) return false;
     if (root->data == key) return true;
     return searchNode(root->left, key) || searchNode(root->right, key);
 }
 
-// ⭐ NEW: Find max value in the tree
 int findMax(Node* root) {
     if (!root) return INT_MIN;
     return max(root->data, max(findMax(root->left), findMax(root->right)));
 }
 
-// ⭐ NEW: Mirror the tree
 void mirrorTree(Node* root) {
     if (!root) return;
     swap(root->left, root->right);
@@ -118,13 +113,35 @@ void mirrorTree(Node* root) {
     mirrorTree(root->right);
 }
 
-// ⭐ NEW: Delete/free the entire tree
 void deleteTree(Node* root) {
     if (!root) return;
     deleteTree(root->left);
     deleteTree(root->right);
     delete root;
 }
+ 
+
+int diameter(Node* root, int& height) {
+    if (!root) {
+        height = 0;
+        return 0;
+    }
+
+    int lh = 0, rh = 0;
+
+    int ldia = diameter(root->left, lh);
+    int rdia = diameter(root->right, rh);
+
+    height = max(lh, rh) + 1;
+
+    return max({ldia, rdia, lh + rh + 1});
+}
+
+int getDiameter(Node* root) {
+    int h = 0;
+    return diameter(root, h);
+}
+
 
 int main() {
     cout << "Create your binary tree manually:\n";
@@ -146,6 +163,8 @@ int main() {
     cout << "\nInternal nodes: " << countInternalNodes(root);
     cout << "\nMaximum value in tree: " << findMax(root);
 
+    cout << "\nDiameter of tree: " << getDiameter(root);
+
     int key;
     cout << "\n\nEnter value to search: ";
     cin >> key;
@@ -156,11 +175,10 @@ int main() {
 
     cout << "Level-order after mirroring: ";
     printLevelOrder(root);
+    cout << "\n";
 
-
-    
     deleteTree(root);
-    cout << "\nTree deleted successfully.\n";
+    cout << "Tree deleted successfully.\n";
 
     return 0;
 }
