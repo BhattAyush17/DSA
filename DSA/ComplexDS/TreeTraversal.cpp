@@ -49,6 +49,7 @@ void printPreorder(Node* root) {
     cout << root->data << " ";
     printPreorder(root->left);
     printPreorder(root->right);
+    
 }
 
 void printPostorder(Node* root) {
