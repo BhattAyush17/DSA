@@ -46,3 +46,22 @@ def preorder_traversal(root):
     # Then explore left and right subtrees
     preorder_traversal(root.left)
     preorder_traversal(root.right)
+
+    def postorder_traversal(root):
+    """
+    Postorder traversal visits:
+    left subtree -> right subtree -> current node
+    
+    Used when:
+    - deleting a tree
+    - evaluating expression trees
+    """
+    
+    if root is None:
+        return
+    
+    postorder_traversal(root.left)
+    postorder_traversal(root.right)
+    
+    # Process node after children are done
+    print(root.val, end=" ")
